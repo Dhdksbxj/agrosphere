@@ -1,0 +1,21 @@
+# .NET generated files
+bin/
+obj/
+.vs/
+
+# User-specific files
+*.user
+*.suo
+
+# Logs and temporary files
+*.log
+*.cache
+
+# Local databases
+*.db
+*.db-shm
+*.db-wal
+
+# Local development secrets
+appsettings.Development.json
+secrets.json

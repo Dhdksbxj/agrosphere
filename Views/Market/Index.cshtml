@@ -1,0 +1,63 @@
+@{
+    var listings = (List<Listing>)ViewBag.Listings;
+}
+
+<h1 class="page-title">Market &amp; Trade</h1>
+
+<div style="display:flex;gap:10px;margin-bottom:18px;">
+    <a href="/Market/Orders" class="btn btn-outline">My Orders</a>
+    <a href="/Market/Trace" class="btn btn-outline">Batch Trace</a>
+</div>
+
+<div class="section">
+    <h3>Post New Listing</h3>
+    <form method="post" action="/Market/AddListing">
+        <div class="form-row">
+            <input type="text" name="cropName" placeholder="Crop Name" required />
+            <input type="number" name="quantity" placeholder="Qty (kg)" step="0.1" required />
+            <input type="number" name="pricePerKg" placeholder="Price/kg (₹)" step="0.01" required />
+            <input type="text" name="farmName" placeholder="Farm / Seller" required />
+            <button type="submit" class="btn btn-primary">Post</button>
+        </div>
+    </form>
+</div>
+
+<div style="display:flex;gap:10px;margin-bottom:20px;">
+    <a href="/Market/Orders" class="btn btn-outline">Order Book</a>
+    <a href="/Market/Trace" class="btn btn-outline">Batch Trace</a>
+</div>
+
+<div class="section">
+    <h3>Marketplace (@listings.Count listings)</h3>
+    @if (listings.Count == 0)
+    {
+        <p style="color:#999;">No listings yet.</p>
+    }
+    else
+    {
+        <div class="card-grid">
+            @foreach (var l in listings)
+            {
+                <div class="card">
+                    <h4>@l.CropName</h4>
+                    <p>@l.Quantity kg at ₹@l.PricePerKg/kg</p>
+                    <p style="font-size:12px;color:#888;">@l.FarmName</p>
+                    <div style="display:flex;gap:6px;margin-top:10px;">
+                        <form method="post" action="/Market/Buy" style="display:inline;">
+                            <input type="hidden" name="listingId" value="@l.Id" />
+                            <input type="hidden" name="qty" value="@l.Quantity" />
+                            <button class="btn btn-sm btn-primary">Buy</button>
+                        </form>
+                        @if (l.UserId == Context.Session.GetInt32("UserId"))
+                        {
+                            <form method="post" action="/Market/DeleteListing" style="display:inline;">
+                                <input type="hidden" name="id" value="@l.Id" />
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

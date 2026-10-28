@@ -1,0 +1,64 @@
+@{
+    var items = (List<InventoryItem>)ViewBag.Items;
+    int farmId = ViewBag.FarmId;
+}
+
+<h1 class="page-title">Inventory — @ViewBag.FarmName</h1>
+<a href="/Farm" style="font-size:13px;color:#2d5a3d;margin-bottom:16px;display:inline-block;">&larr; Back to Farms</a>
+
+<div class="section">
+    <h3>Add Item</h3>
+    <form method="post" action="/Farm/AddInventory">
+        <input type="hidden" name="farmId" value="@farmId" />
+        <div class="form-row">
+            <input type="text" name="itemName" placeholder="Item name" required />
+            <select name="category">
+                <option>Seeds</option>
+                <option>Fertilizer</option>
+                <option>Pesticide</option>
+                <option>Equipment</option>
+            </select>
+            <input type="number" name="quantity" placeholder="Qty" required />
+            <input type="text" name="unit" placeholder="Unit (kg, bags, litres)" required />
+            <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+    </form>
+</div>
+
+<div class="section">
+    <h3>Stock (@items.Count items)</h3>
+    @if (items.Count == 0)
+    {
+        <p style="color:#999;">No inventory items.</p>
+    }
+    else
+    {
+        <table>
+            <thead><tr><th>Item</th><th>Category</th><th>Quantity</th><th>Unit</th><th>Resell / Action</th></tr></thead>
+            <tbody>
+            @foreach (var i in items)
+            {
+                <tr>
+                    <td><strong>@i.ItemName</strong></td>
+                    <td><span class="badge badge-blue">@i.Category</span></td>
+                    <td>@i.Quantity</td>
+                    <td>@i.Unit</td>
+                    <td>
+                        <form method="post" action="/Farm/ResellToMarket" style="display:inline-flex;gap:4px;align-items:center;">
+                            <input type="hidden" name="id" value="@i.Id" />
+                            <input type="hidden" name="farmId" value="@farmId" />
+                            <input type="number" name="pricePerKg" placeholder="₹/kg" style="width:70px;padding:3px 6px;font-size:12px;border:1px solid #ccc;border-radius:4px;" required />
+                            <button type="submit" class="btn btn-sm btn-primary" style="padding:4px 8px;font-size:11px;">List on Market</button>
+                        </form>
+                        <form method="post" action="/Farm/DeleteInventory" style="display:inline;margin-left:6px;">
+                            <input type="hidden" name="id" value="@i.Id" />
+                            <input type="hidden" name="farmId" value="@farmId" />
+                            <button class="btn btn-sm btn-danger" style="padding:4px 8px;font-size:11px;">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

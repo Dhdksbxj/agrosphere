@@ -1,0 +1,33 @@
+<h1 class="page-title">Dashboard</h1>
+<p style="margin-bottom:20px;color:#666;">Welcome, @ViewBag.UserName</p>
+
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="label">My Farms</div>
+        <div class="value">@ViewBag.FarmCount</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Crops Tracked</div>
+        <div class="value">@ViewBag.CropCount</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Market Listings</div>
+        <div class="value">@ViewBag.ListingCount</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Forum Posts</div>
+        <div class="value">@ViewBag.PostCount</div>
+    </div>
+</div>
+
+<div class="section">
+    <h3>Quick Links</h3>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="/Farm/Index" class="btn btn-primary">Manage Farms</a>
+        <a href="/Market/Index" class="btn btn-primary">Marketplace</a>
+        <a href="/Finance/Index" class="btn btn-primary">Finances</a>
+        <a href="/Community/Index" class="btn btn-primary">Forum</a>
+        <a href="/Finance/Forecast" class="btn btn-outline">Price Forecast</a>
+        <a href="/Market/Trace" class="btn btn-outline">Batch Trace</a>
+    </div>
+</div>

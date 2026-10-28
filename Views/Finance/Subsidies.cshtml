@@ -1,0 +1,14 @@
+<h1 class="page-title">Government Subsidies</h1>
+<a href="/Finance" style="font-size:13px;color:#2d5a3d;margin-bottom:16px;display:inline-block;">&larr; Back to Finance</a>
+
+<div class="section">
+    @foreach (var s in (List<dynamic>)ViewBag.Subsidies)
+    {
+        <div class="card" style="margin-bottom:12px;">
+            <h4>@s.Name</h4>
+            <p>@s.Description</p>
+            <p style="font-size:12px;margin-top:6px;"><strong>Eligibility:</strong> @s.Eligibility</p>
+            <span class="badge badge-green" style="margin-top:6px;">@s.Amount</span>
+        </div>
+    }
+</div>

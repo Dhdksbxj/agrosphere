@@ -1,0 +1,71 @@
+@{
+    var posts = (List<ForumPost>)ViewBag.Posts;
+}
+
+<h1 class="page-title">Community Forum</h1>
+
+<div class="section">
+    <h3>New Post</h3>
+    <form method="post" action="/Community/AddPost">
+        <div class="form-row">
+            <input type="text" name="title" placeholder="Post title" required style="flex:2;" />
+            <input type="text" name="content" placeholder="What's on your mind?" required style="flex:3;" />
+            <button type="submit" class="btn btn-primary">Post</button>
+        </div>
+    </form>
+</div>
+
+<div class="section">
+    <h3>Discussions (@posts.Count)</h3>
+    @if (posts.Count == 0)
+    {
+        <p style="color:#999;">No posts yet. Start the conversation!</p>
+    }
+    else
+    {
+        @foreach (var p in posts)
+        {
+            <div class="forum-post">
+                <div class="post-header">
+                    <div>
+                        <strong class="post-author">&#64;@p.AuthorName</strong>
+                        <span class="post-date">&bull; @p.PostedOn.ToString("dd MMM, HH:mm")</span>
+                    </div>
+                    @if (p.UserId == Context.Session.GetInt32("UserId"))
+                    {
+                        <form method="post" action="/Community/DeletePost" style="display:inline;">
+                            <input type="hidden" name="id" value="@p.Id" />
+                            <button class="btn btn-sm btn-danger" style="padding:2px 8px;font-size:11px;">Delete</button>
+                        </form>
+                    }
+                </div>
+                <h4 class="post-title" style="margin:8px 0 4px 0;font-size:15px;">@p.Title</h4>
+                <p class="post-body" style="font-size:14px;color:#2c3e50;margin-bottom:12px;line-height:1.5;">@p.Content</p>
+
+                <!-- Threaded Replies (Twitter / X style conversation) -->
+                @if (p.Replies != null && p.Replies.Count > 0)
+                {
+                    <div class="thread-replies" style="background:#f9fbf9;border-left:3px solid #2e5a44;border-radius:4px;padding:10px 14px;margin-bottom:12px;">
+                        @foreach (var reply in p.Replies.OrderBy(r => r.RepliedOn))
+                        {
+                            <div class="reply-item" style="border-bottom:1px solid #eef2ee;padding:6px 0;">
+                                <div style="font-size:12px;margin-bottom:2px;">
+                                    <strong style="color:#1b382b;">&#64;@reply.AuthorName</strong>
+                                    <span style="color:#888;font-size:11px;">&bull; @reply.RepliedOn.ToString("dd MMM, HH:mm")</span>
+                                </div>
+                                <div style="font-size:13px;color:#333;">@reply.Content</div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <!-- Quick Inline Reply Box -->
+                <form method="post" action="/Community/AddReply" style="display:flex;gap:8px;margin-top:8px;">
+                    <input type="hidden" name="postId" value="@p.Id" />
+                    <input type="text" name="content" placeholder="Post your reply..." required style="flex:1;padding:6px 12px;font-size:13px;border:1px solid #dcdfdc;border-radius:6px;background:#fff;" />
+                    <button type="submit" class="btn btn-sm btn-primary" style="padding:6px 14px;font-size:12px;">Reply</button>
+                </form>
+            </div>
+        }
+    }
+</div>

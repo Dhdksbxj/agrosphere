@@ -1,0 +1,18 @@
+<h1 class="page-title">Price Forecast</h1>
+<a href="/Finance" style="font-size:13px;color:#2d5a3d;margin-bottom:16px;display:inline-block;">&larr; Back to Finance</a>
+
+<div class="section">
+    <h3>Predicted Market Prices (next 30 days)</h3>
+    <div class="forecast-grid">
+        @foreach (var item in (List<dynamic>)ViewBag.Forecasts)
+        {
+            <div class="forecast-card">
+                <div class="crop-name">@item.Crop</div>
+                <div class="price">₹@item.Price/kg</div>
+                <div class="trend @(item.Trend == "up" ? "trend-up" : "trend-down")">
+                    @(item.Trend == "up" ? "▲" : "▼") @item.Change
+                </div>
+            </div>
+        }
+    </div>
+</div>

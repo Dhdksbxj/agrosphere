@@ -1,0 +1,52 @@
+@{
+    var farms = (List<Farm>)ViewBag.Farms;
+}
+
+<h1 class="page-title">Farm &amp; Crop Management</h1>
+
+<div class="section">
+    <h3>Add New Farm</h3>
+    <form method="post" action="/Farm/AddFarm">
+        <div class="form-row">
+            <input type="text" name="name" placeholder="Farm Name" required />
+            <input type="text" name="location" placeholder="Location" required />
+            <input type="number" name="area" placeholder="Area (acres)" step="0.1" required />
+            <select name="farmType">
+                <option>Organic</option>
+                <option>Conventional</option>
+                <option>Mixed</option>
+                <option>Hydroponic</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Add Farm</button>
+        </div>
+    </form>
+</div>
+
+<div class="section">
+    <h3>My Farms (@farms.Count)</h3>
+    @if (farms.Count == 0)
+    {
+        <p style="color:#999;">No farms yet. Add one above.</p>
+    }
+    else
+    {
+        <div class="card-grid">
+            @foreach (var f in farms)
+            {
+                <div class="card">
+                    <h4>@f.Name</h4>
+                    <p>@f.Location &mdash; @f.AreaAcres acres</p>
+                    <p><span class="badge badge-green">@f.FarmType</span></p>
+                    <div style="display:flex;gap:6px;margin-top:10px;">
+                        <a href="/Farm/Crops?farmId=@f.Id" class="btn btn-sm btn-outline">Crops</a>
+                        <a href="/Farm/Inventory?farmId=@f.Id" class="btn btn-sm btn-outline">Inventory</a>
+                        <form method="post" action="/Farm/DeleteFarm" style="display:inline;">
+                            <input type="hidden" name="id" value="@f.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

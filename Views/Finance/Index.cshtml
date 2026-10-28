@@ -1,0 +1,67 @@
+@{
+    var txns = (List<Transaction>)ViewBag.Transactions;
+    decimal inc = ViewBag.Income;
+    decimal exp = ViewBag.Expense;
+}
+
+<h1 class="page-title">Finance</h1>
+
+<div class="balance-bar">
+    <div class="balance-item balance-income"><div class="label">Income</div><div class="amount" style="color:#2e7d32;">₹@inc</div></div>
+    <div class="balance-item balance-expense"><div class="label">Expenses</div><div class="amount" style="color:#c62828;">₹@exp</div></div>
+    <div class="balance-item balance-net"><div class="label">Net</div><div class="amount" style="color:#1565c0;">₹@(inc - exp)</div></div>
+</div>
+
+<div class="section">
+    <h3>Add Transaction</h3>
+    <form method="post" action="/Finance/AddTransaction">
+        <div class="form-row">
+            <select name="type">
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+            </select>
+            <input type="text" name="description" placeholder="Description" required />
+            <input type="number" name="amount" placeholder="Amount (₹)" step="0.01" required />
+            <input type="text" name="category" placeholder="Category" required />
+            <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+    </form>
+</div>
+
+<div style="display:flex;gap:10px;margin-bottom:20px;">
+    <a href="/Finance/Forecast" class="btn btn-outline">Price Forecast</a>
+    <a href="/Finance/Subsidies" class="btn btn-outline">Subsidies</a>
+</div>
+
+<div class="section">
+    <h3>Transactions</h3>
+    @if (txns.Count == 0)
+    {
+        <p style="color:#999;">No transactions yet.</p>
+    }
+    else
+    {
+        <table>
+            <thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Category</th><th>Amount</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var t in txns)
+            {
+                var badge = t.Type == "Income" ? "badge-green" : "badge-red";
+                <tr>
+                    <td>@t.Date.ToString("dd MMM")</td>
+                    <td><span class="badge @badge">@t.Type</span></td>
+                    <td>@t.Description</td>
+                    <td>@t.Category</td>
+                    <td>₹@t.Amount</td>
+                    <td>
+                        <form method="post" action="/Finance/DeleteTransaction" style="display:inline;">
+                            <input type="hidden" name="id" value="@t.Id" />
+                            <button class="btn btn-sm btn-danger">Del</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

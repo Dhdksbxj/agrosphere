@@ -1,0 +1,26 @@
+<h1 class="page-title">Batch Trace</h1>
+<a href="/Market" style="font-size:13px;color:#2d5a3d;margin-bottom:16px;display:inline-block;">&larr; Back to Market</a>
+
+<div class="section">
+    <h3>Look up a batch</h3>
+    <form method="get" action="/Market/Trace">
+        <div class="form-row">
+            <input type="text" name="batchId" placeholder="Enter Batch ID (e.g. AGRO-B001)" value="@(ViewBag.BatchId ?? "")" />
+            <button type="submit" class="btn btn-primary">Trace</button>
+        </div>
+    </form>
+</div>
+
+@if (ViewBag.TraceResult != null)
+{
+    var t = (dynamic)ViewBag.TraceResult;
+    <div class="trace-result">
+        <h4>Batch: @t.BatchId</h4>
+        <div class="trace-row"><span>Crop</span><span>@t.Crop</span></div>
+        <div class="trace-row"><span>Farm</span><span>@t.Farm</span></div>
+        <div class="trace-row"><span>Harvest Date</span><span>@t.HarvestDate</span></div>
+        <div class="trace-row"><span>Packed</span><span>@t.PackDate</span></div>
+        <div class="trace-row"><span>Quality Grade</span><span>@t.Grade</span></div>
+        <div class="trace-row"><span>Status</span><span class="badge badge-green">@t.Status</span></div>
+    </div>
+}

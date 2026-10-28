@@ -1,0 +1,82 @@
+@{
+    var orders = (List<Order>)ViewBag.Orders;
+}
+
+<h1 class="page-title">Order Book</h1>
+<a href="/Market" style="font-size:13px;color:#2d5a3d;margin-bottom:16px;display:inline-block;">&larr; Back to Market</a>
+
+<div class="section">
+    @if (orders.Count == 0)
+    {
+        <p style="color:#999;">No orders yet. Buy something from the marketplace.</p>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Crop</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                    <th>Status &amp; Delivery ETA</th>
+                    <th>Batch Code</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var o in orders)
+            {
+                var badge = o.Status == "Delivered" ? "badge-green" : o.Status == "Cancelled" ? "badge-red" : o.Status == "Shipped" ? "badge-blue" : "badge-orange";
+                <tr>
+                    <td><strong>#@o.Id</strong></td>
+                    <td>@o.CropName</td>
+                    <td>@o.Quantity kg</td>
+                    <td>₹@o.TotalPrice</td>
+                    <td>
+                        <div><span class="badge @badge">@o.Status</span></div>
+                        <div style="font-size:12px;color:#555;margin-top:4px;">
+                            <strong>ETA:</strong> @o.EstimatedDelivery.ToString("dd MMM yyyy, hh:mm tt")
+                        </div>
+                        <div style="font-size:11px;color:#888;">
+                            @o.TrackingStatus (@o.DeliveryPartner)
+                        </div>
+                    </td>
+                    <td>
+                        <a href="/Market/Trace?batchId=@o.BatchCode" style="font-family:monospace;font-size:12px;color:#2e5a44;text-decoration:underline;">@o.BatchCode</a>
+                    </td>
+                    <td>
+                        @if (o.Status != "Cancelled" && o.Status != "Delivered")
+                        {
+                            <form method="post" action="/Market/CancelOrder" style="display:inline;" onsubmit="return confirm('Cancel this order and receive a full ledger refund?');">
+                                <input type="hidden" name="id" value="@o.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger" style="margin-right:4px;">Cancel</button>
+                            </form>
+                            @if (o.Status == "Confirmed")
+                            {
+                                <form method="post" action="/Market/UpdateOrder" style="display:inline;">
+                                    <input type="hidden" name="id" value="@o.Id" />
+                                    <input type="hidden" name="status" value="Shipped" />
+                                    <button class="btn btn-sm btn-outline">Ship</button>
+                                </form>
+                            }
+                            else if (o.Status == "Shipped")
+                            {
+                                <form method="post" action="/Market/UpdateOrder" style="display:inline;">
+                                    <input type="hidden" name="id" value="@o.Id" />
+                                    <input type="hidden" name="status" value="Delivered" />
+                                    <button class="btn btn-sm btn-primary">Deliver</button>
+                                </form>
+                            }
+                        }
+                        else
+                        {
+                            <span style="font-size:12px;color:#999;">Closed</span>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

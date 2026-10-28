@@ -1,0 +1,55 @@
+@{
+    var crops = (List<Crop>)ViewBag.Crops;
+    int farmId = ViewBag.FarmId;
+}
+
+<h1 class="page-title">Crops — @ViewBag.FarmName</h1>
+<a href="/Farm" style="font-size:13px;color:#2d5a3d;margin-bottom:16px;display:inline-block;">&larr; Back to Farms</a>
+
+<div class="section">
+    <h3>Add Crop</h3>
+    <form method="post" action="/Farm/AddCrop">
+        <input type="hidden" name="farmId" value="@farmId" />
+        <div class="form-row">
+            <input type="text" name="name" placeholder="Crop Name" required />
+            <select name="season">
+                <option>Kharif</option>
+                <option>Rabi</option>
+                <option>Zaid</option>
+            </select>
+            <input type="number" name="areaSown" placeholder="Area sown (acres)" step="0.1" required />
+            <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+    </form>
+</div>
+
+<div class="section">
+    <h3>Crops (@crops.Count)</h3>
+    @if (crops.Count == 0)
+    {
+        <p style="color:#999;">No crops yet.</p>
+    }
+    else
+    {
+        <table>
+            <thead><tr><th>Crop</th><th>Season</th><th>Area</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var c in crops)
+            {
+                <tr>
+                    <td>@c.Name</td>
+                    <td><span class="badge badge-blue">@c.Season</span></td>
+                    <td>@c.AreaSown acres</td>
+                    <td>
+                        <form method="post" action="/Farm/DeleteCrop" style="display:inline;">
+                            <input type="hidden" name="id" value="@c.Id" />
+                            <input type="hidden" name="farmId" value="@farmId" />
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

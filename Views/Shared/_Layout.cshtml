@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AgroSphere</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    @if (Context.Session.GetInt32("UserId") != null)
+    {
+        <nav class="sidebar">
+            <div class="sidebar-brand">AgroSphere</div>
+            <a href="/Home/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">Dashboard</a>
+            <a href="/Farm/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Farm" ? "active" : "")">Farm &amp; Crop</a>
+            <a href="/Market/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Market" ? "active" : "")">Market &amp; Trade</a>
+            <a href="/Finance/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Finance" ? "active" : "")">Finance</a>
+            <a href="/Community/Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Community" ? "active" : "")">Community (Forum)</a>
+            <div class="sidebar-bottom">
+                <span class="user-label">@Context.Session.GetString("UserName")</span>
+                <a href="/Account/Logout" class="logout-link">Logout</a>
+            </div>
+        </nav>
+        <main class="content">
+            @RenderBody()
+        </main>
+    }
+    else
+    {
+        <main class="auth-page">
+            @RenderBody()
+        </main>
+    }
+</body>
+</html>
